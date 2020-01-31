@@ -6,9 +6,8 @@ to monitor when a repo is changed. A token can be generated here. You should gen
 the token with full control of private repositories, as shown in the image below. Be sure
 to save the token somewhere that is secure.
 
-Github Access Token: 2d66c544f5be96d8cec0df70086fe4e6cd94f347
-arn:aws:iam::089164095823:role/UdacityFlaskDeployCBKubectlRole
-arn:aws:iam::089164095823:role/UdacityFlaskDeployCBKubectlRole
+Github Access Token: <token here>
+
 
 2) The file buildspec.yml instructs CodeBuild. We need a way to pass your jwt secret to
 the app in kubernetes securly. You will be using AWS Parameter Store to do this. First
