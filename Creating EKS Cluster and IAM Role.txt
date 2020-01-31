@@ -1,0 +1,41 @@
+STEPS TO CREATE EKS Cluster and IAM Role in POWERSHELL
+----------------------------------------
+Before you can deploy your application, you will need to
+create an EKS cluster and set up an IAM role that CodeBuild
+can use to interact with EKS. You can follow the steps below
+to do this from the command line
+
+
+1) Create Kupernetes EKS Cluster named 'simple-jwt-api'
+    eksctl create cluster --name simple-jwt-api
+    
+2) Setup IAM Role for the cluster in AWS
+    export ACCOUNT_ID=$(aws.cmd sts get-caller-identity --query Account --output text)
+    (returns: 089164095823)
+    
+3) Setup ENV by creating a tole policy
+    export TRUST="{ \"Version\": \"2012-10-17\", \"Statement\": [ { \"Effect\": \"Allow\", \"Principal\": { \"AWS\": \"arn:aws:iam::${ACCOUNT_ID}:root\" }, \"Action\": \"sts:AssumeRole\" } ] }"
+
+4) Create role named 'UdacityFlaskDeployCBKubectRole'
+    aws.cmd iam create-role --role-name UdacityFlaskDeployCBKubectlRole --assume-role-policy-document "$TRUST" --output text --query 'Role.Arn'
+
+    returns: arn:aws:iam::089164095823:role/UdacityFlaskDeployCBKubectlRole
+    
+5) Create a role policy document called /tmp/iam-role-policy
+    echo '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "eks:Describe*", "ssm:GetParameters" ], "Resource": "*" } ] }' > iam-role-policy 
+
+6) Attach the policy to the 'UdacityFlaskDeployCBKubectlRole'
+    aws.cmd iam put-role-policy --role-name UdacityFlaskDeployCBKubectlRole --policy-name eks-describe --policy-document file://iam-role-policy
+
+7) Grant the role access to the cluster. Get the current configmap and save to a file.
+    kubectl get -n kube-system configmap/aws-auth -o yaml > aws-auth-patch.yml
+
+8) In the data/mapRoles section of this document add (edit), replacing <ACCOUNT_ID> with your account id
+    - rolearn: arn:aws:iam::<ACCOUNT_ID>:role/UdacityFlaskDeployCBKubectlRole
+    username: build
+    groups:
+    - system:masters
+
+9) Update your cluster's configmap
+    kubectl patch configmap/aws-auth -n kube-system --patch "$(cat aws-auth-patch.yml)"
+    

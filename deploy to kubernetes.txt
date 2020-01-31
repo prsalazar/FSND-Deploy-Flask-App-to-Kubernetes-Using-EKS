@@ -1,0 +1,54 @@
+DEPLOY To Kubernetes using CodePipeline & CodeBuild
+----------------------------------------------------
+
+1) Generate a GitHub access token. A Github acces token will allow CodePipeline
+to monitor when a repo is changed. A token can be generated here. You should generate
+the token with full control of private repositories, as shown in the image below. Be sure
+to save the token somewhere that is secure.
+
+Github Access Token: 2d66c544f5be96d8cec0df70086fe4e6cd94f347
+arn:aws:iam::089164095823:role/UdacityFlaskDeployCBKubectlRole
+arn:aws:iam::089164095823:role/UdacityFlaskDeployCBKubectlRole
+
+2) The file buildspec.yml instructs CodeBuild. We need a way to pass your jwt secret to
+the app in kubernetes securly. You will be using AWS Parameter Store to do this. First
+add the following to your buildspec.yml file:
+
+    env:
+      parameter-store:         
+        JWT_SECRET: JWT_SECRET
+        
+This lets CodeBuild know to set an evironment variable based on a value in the parameter-store.
+
+3) Put secret into AWS Parameter Store
+    aws.cmd ssm put-parameter --name JWT_SECRET --value "HenryTheWeinerDog" --type SecureString
+
+4) Modify CloudFormation template.
+
+There is file named ci-cd-codepipeline.cfn.yml, this the the template file you will use to create
+your CodePipeline pipeline. Open this file and go to the 'Parameters' section. These are parameters
+that will accept values when you create a stack. Fill in the 'Default' value for the following:
+
+EksClusterName : use the name of the EKS cluster you created above
+GitSourceRepo : use the name of your project's github repo.
+GitHubUser : use your github user name
+KubectlRoleName : use the name of the role you created for kubectl above
+Save this file.
+
+5) Create a stack for CodePipeline
+
+    - Go the the CloudFormation service in the aws console.
+    - Press the 'Create Stack' button.
+    - Choose the 'Upload template to S3' option and upload the template file 'ci-cd-codepipeline.cfn.yml'
+    - Press 'Next'. Give the stack a name, fill in your GitHub login and the Github access token generated in step 1.
+    - Confirm the cluster name matches your cluster, the 'kubectl IAM role' matches the role you created above,
+      and the repository matches the name of your forked repo.
+    - Create the stack.
+
+You can check it's status in the CloudFormation console.
+
+6) Check the pipeline works. Once the stack is successfully created, commit a change to the master branch
+   of your github repo. Then, in the aws console go to the CodePipeline UI. You should see that the build
+   is running.
+
+

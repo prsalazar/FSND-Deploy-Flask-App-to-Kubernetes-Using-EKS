@@ -1,0 +1,17 @@
+STEPS TO RUN FLASK_APP LOCALLY IN DOCKER
+--------------------------------------------
+
+1) Create 'Dockerfile' in app folder.
+2) Create 'env_file' in app folder. Used to hold ENVs used by app
+3) Build docker image:
+    'docker build --tag jwt-api-test'
+4) Run docker image:
+    'docker run -p 5000:8080 --env-file env_file jwt-api-test'
+5) Test running app endpoints
+    export TOKEN=`curl -d '{"email":"<EMAIL>","password":"<PASSWORD>"}' -H "Content-Type: application/json" -X POST localhost:5000/auth  | jq -r '.token'`
+    echo $TOKEN  (should see encrypted JWT)
+    curl --request GET 'http://127.0.0.1:5000/contents' -H "Authorization: Bearer ${TOKEN}" | jq .
+    (above cmd will show you json data with email passed in)
+6) Stop docker container
+    docker ps (get container ID)
+    docker stop <container ID>
