@@ -17,6 +17,6 @@ metadata:
   creationTimestamp: "2020-02-03T17:30:40Z"
   name: aws-auth
   namespace: kube-system
-  resourceVersion: "773"
+  resourceVersion: "3322"
   selfLink: /api/v1/namespaces/kube-system/configmaps/aws-auth
   uid: e635c2ef-46aa-11ea-b5b2-0e8a6b4ac476
