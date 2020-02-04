@@ -1,5 +1,5 @@
 pyjwt
 flask
 gunicorn
-typing
+json
 pytest
