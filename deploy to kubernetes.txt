@@ -55,11 +55,11 @@ You can check it's status in the CloudFormation console.
     kubectl get services simple-jwt-api -o wide
 
 NAME             TYPE           CLUSTER-IP      EXTERNAL-IP                                                              PORT(S)        AGE   SELECTOR
-simple-jwt-api   LoadBalancer   10.100.19.244   a7ab8a45d476811eabc340291639e953-669791850.us-west-2.elb.amazonaws.com   80:32155/TCP   78s   app=simple-jwt-api
+simple-jwt-api   LoadBalancer   10.100.19.244   a7ab8a45d476811eabc340291639e953-669791850.us-west-2.elb.amazonaws.com   80:32155/TCP   54m   app=simple-jwt-api
 
     Now use the external ip url to test the app:
 
-        export TOKEN=`curl -d '{"email":"test@test.com","password":"1234"}' -H "Content-Type: application/json" -X POST a7ab8a45d476811eabc340291639e953-669791850.us-west-2.elb.amazonaws.com/auth  | jq -r '.token'`
-        curl --request GET 'a7ab8a45d476811eabc340291639e953-669791850.us-west-2.elb.amazonaws.com' -H "Authorization: Bearer ${TOKEN}" | jq 
+    export TOKEN=`curl -d '{"email":"test@test.com","password":"1234"}' -H "Content-Type: application/json" -X POST a7ab8a45d476811eabc340291639e953-669791850.us-west-2.elb.amazonaws.com/auth  | jq -r '.token'`
+    curl --request GET 'a7ab8a45d476811eabc340291639e953-669791850.us-west-2.elb.amazonaws.com/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
 
 8) Save the external IP above
