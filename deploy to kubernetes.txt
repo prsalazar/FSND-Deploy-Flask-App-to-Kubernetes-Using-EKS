@@ -62,4 +62,4 @@ You can check it's status in the CloudFormation console.
         export TOKEN=`curl -d '{"email":"test@test.com","password":"1234"}' -H "Content-Type: application/json" -X POST ad6c9ae6e46c011eab5b20e8a6b4ac47-493218405.us-west-2.elb.amazonaws.com/auth  | jq -r '.token'`
         curl --request GET 'ad6c9ae6e46c011eab5b20e8a6b4ac47-493218405.us-west-2.elb.amazonaws.com/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
 
-8) Save the external IP above 
+8) Save the external IP above
