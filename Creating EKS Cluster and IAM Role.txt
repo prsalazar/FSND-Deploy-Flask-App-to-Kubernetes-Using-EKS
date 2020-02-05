@@ -32,9 +32,9 @@ to do this from the command line
 
 8) In the data/mapRoles section of this document add (edit), replacing <ACCOUNT_ID> with your account id
     - rolearn: arn:aws:iam::<ACCOUNT_ID>:role/UdacityFlaskDeployCBKubectlRole
-    username: build
-    groups:
-    - system:masters
+      username: build
+      groups:
+        - system:masters
 
 9) Update your cluster's configmap
     kubectl patch configmap/aws-auth -n kube-system --patch "$(cat aws-auth-patch.yml)"

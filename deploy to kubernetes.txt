@@ -63,3 +63,5 @@ simple-jwt-api   LoadBalancer   10.100.19.244   a7ab8a45d476811eabc340291639e953
     curl --request GET 'a7ab8a45d476811eabc340291639e953-669791850.us-west-2.elb.amazonaws.com/contents' -H "Authorization: Bearer ${TOKEN}" | jq 
 
 8) Save the external IP above
+
+9) to delete stacks, first delete VPC's otherwise stack delete will fail.
