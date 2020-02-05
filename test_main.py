@@ -27,7 +27,7 @@ def test_health(client):
     assert response.status_code == 200
     assert response.json == 'Healthy'
     print (PASSWORD)
-    assert False, "Force failure on build"
+    #assert False, "Force failure on build"
 
 
 def test_auth(client):
